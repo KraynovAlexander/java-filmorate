@@ -35,7 +35,7 @@ class FilmorateApplicationTests {
 				"Шурка",
 				"Саша",
 				LocalDate.of(2018, 5, 30));
-		userController.addUser(user);
+		userController.add(user);
 
 		assertEquals(user.getEmail(),
 				"Shyra@yandex.ru");
@@ -49,7 +49,7 @@ class FilmorateApplicationTests {
 				"Шурка",
 				"Саша",
 				LocalDate.of(2018, 5, 30));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.addUser(user));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.add(user));
 
 		assertEquals("Адрес не может быть нулевым", thrown.getMessage());
 	}
@@ -61,7 +61,7 @@ class FilmorateApplicationTests {
 				"Шурка",
 				"Саша",
 				LocalDate.of(2018, 5, 30));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.addUser(user));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.add(user));
 		assertEquals("Невалидный Email", thrown.getMessage());
 	}
 
@@ -72,7 +72,7 @@ class FilmorateApplicationTests {
 				"  ",
 				"Саша",
 				LocalDate.of(2018, 5, 30));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.addUser(user));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.add(user));
 
 		assertEquals("Пустой Логин или введен пробел", thrown.getMessage());
 
@@ -81,7 +81,7 @@ class FilmorateApplicationTests {
 				"Кошка Саша",
 				"Саша",
 				LocalDate.of(2018, 5, 30));
-		thrown = assertThrows(ValidationException.class, () -> userController.addUser(user));
+		thrown = assertThrows(ValidationException.class, () -> userController.add(user));
 
 		assertEquals("Пустой Логин или введен пробел", thrown.getMessage());
 
@@ -94,21 +94,21 @@ class FilmorateApplicationTests {
 				"Шурка",
 				" ",
 				LocalDate.of(2018, 5, 30));
-		userController.addUser(user);
+		userController.add(user);
 		assertEquals(user.getName(), user.getLogin());
 
 	}
 
 	@Test
 	void dateBirthFuturePresent() {
-		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.addUser(new User(1,
+		ValidationException thrown = assertThrows(ValidationException.class, () -> userController.add(new User(1,
 				"Kapa@yandex.ru",
 				"Шурка",
 				" ",
 				LocalDate.now())));
 		assertEquals("Дата рождения не может быть сегодняшней или будущей", thrown.getMessage());
 
-		thrown = assertThrows(ValidationException.class, () -> userController.addUser(new User(1,
+		thrown = assertThrows(ValidationException.class, () -> userController.add(new User(1,
 				"Kapa@yandex.ru",
 				"Шурка",
 				" ",
@@ -124,7 +124,7 @@ class FilmorateApplicationTests {
 				"Советская комедия",
 				LocalDate.of(1985, 5, 30),
 				Duration.ofMinutes(120));
-		filmController.addFilm(film);
+		filmController.add(film);
 
 		assertEquals(film.getName(), "Веселые ребята");
 	}
@@ -136,7 +136,7 @@ class FilmorateApplicationTests {
 				"Советская комедия",
 				LocalDate.of(1985, 5, 30),
 				Duration.ofMinutes(120));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.add(film));
 		assertEquals("Название не может быть пустым", thrown.getMessage());
 	}
 
@@ -149,7 +149,7 @@ class FilmorateApplicationTests {
 						" Елена говорит, что она певица и приглашает «дирижёра» на вечеринку в пансион,\n " +
 						"в котором она отдыхает вместе с матерью. Костя влюбляется в Елену, но в него самого \n" +
 						"тайком влюблена домработница Елены — Анюта. ", LocalDate.of(1985, 5, 30), Duration.ofMinutes(120));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.add(film));
 		assertEquals("Описание не должно превышать  200 символов", thrown.getMessage());
 	}
 
@@ -160,7 +160,7 @@ class FilmorateApplicationTests {
 				"Советская комедия",
 				LocalDate.of(1884, 5, 30),
 				Duration.ofMinutes(120));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.add(film));
 		assertEquals("Дата выхода не может быть раньше 28 декабря 1895 года", thrown.getMessage());
 	}
 
@@ -172,7 +172,7 @@ class FilmorateApplicationTests {
 				"Советская комедия",
 				LocalDate.of(1984, 5, 30),
 				Duration.ofMinutes(-120));
-		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+		ValidationException thrown = assertThrows(ValidationException.class, () -> filmController.add(film));
 		assertEquals("Продолжительность фильма не может быть отрицательной", thrown.getMessage());
 	}
 

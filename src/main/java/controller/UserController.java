@@ -12,16 +12,15 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@RequestMapping("/users")
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
     private int id = 0;
     private Validator Validator = new Validator();
 
 
-    @PostMapping(value = "/users")
-    public User addUser(@RequestBody User user) {
-
-
+    @PostMapping()
+    public User add(@RequestBody User user) {
         Validator.userValidator(user);
         user.setId(++id);
         users.put(id, user);
@@ -32,8 +31,8 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/users")
-    public User updateUser(@RequestBody User user) {
+    @PutMapping()
+    public User update(@RequestBody User user) {
         Validator.userValidator(user);
         users.put(user.getId(), user);
         log.debug("Пользователь успешно изменен, всего фильмов = {}", users.size());
@@ -41,15 +40,13 @@ public class UserController {
     }
 
 
-    @GetMapping("/users")
-    public Collection<User> getAllUsers() {
-        log.debug("Всего пользователей = {}", users.size());
-
+    @GetMapping()
+    public Collection<User> getAll() {
         return users.values();
     }
 
-    @DeleteMapping(value = "/users")
-    public void clearUser() {
+    @DeleteMapping()
+    public void clear() {
         users.clear();
         id = 0;
         log.debug("Список пользователь очищен = {}", users.size());

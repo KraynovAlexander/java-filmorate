@@ -8,14 +8,14 @@ import java.time.LocalDate;
 
 public class Validator {
     protected void userValidator(User user) {
-        if (user.getEmail().isBlank() || user.getEmail() == null) {
+        if (user.getEmail().isBlank() ) {
             throw new ValidationException("Адрес не может быть нулевым");
         }
         if (!user.getEmail().contains("@")) {
             throw new ValidationException("Невалидный Email");
         }
 
-        if (user.getLogin().isBlank() || user.getLogin() == null || user.getLogin().contains(" ")) {
+        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             throw new ValidationException("Пустой Логин или введен пробел");
         }
 
@@ -31,7 +31,7 @@ public class Validator {
     }
 
     protected void filmValidator(Film film) {
-        if (film.getName().isBlank() || film.getName() == null) {
+        if (film.getName().isBlank() ) {
             throw new ValidationException("Название не может быть пустым");
         }
 
