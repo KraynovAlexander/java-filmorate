@@ -40,7 +40,7 @@ class InMemoryStorageTests {
     @Test
     void createMovieTest() {
         films.create(film);
-        assertFalse(films.getAllFilms().isEmpty());
+        assertFalse(films.getAll().isEmpty());
     }
 
     @Test
@@ -54,7 +54,7 @@ class InMemoryStorageTests {
                 87);
         films.create(film);
         films.update(newOne);
-        assertEquals(87, films.getAllFilms().get(0).getDuration());
+        assertEquals(87, films.getAll().get(0).getDuration());
     }
 
     @Test
@@ -101,7 +101,7 @@ class InMemoryStorageTests {
     @Test
     void UserCreationTest() {
         users.create(user);
-        assertEquals(1, users.getAllUsers().size());
+        assertEquals(1, users.getAll().size());
     }
 
     @Test
@@ -114,7 +114,7 @@ class InMemoryStorageTests {
                 LocalDate.of(1987, 5, 25));
         users.create(user);
         users.update(newOne);
-        assertEquals("Roma", users.getAllUsers().get(0).getName());
+        assertEquals("Roma", users.getAll().get(0).getName());
     }
 
     @Test

@@ -10,7 +10,7 @@ public interface UserStorage {
 
     User update(User user);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
     User findById(Long id);
 

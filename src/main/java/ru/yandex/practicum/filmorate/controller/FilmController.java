@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -49,8 +50,8 @@ public class FilmController {
 
 
     @GetMapping
-    public List<Film> getAllFilms() {
-        return filmStorage.getAllFilms();
+    public ArrayList<Film> getAll() {
+        return filmStorage.getAll();
     }
 
 
