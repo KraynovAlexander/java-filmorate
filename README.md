@@ -35,4 +35,5 @@ FROM users AS u
 LEFT JOIN friendship_statuses AS fs ON u.user_id = fs.user_id
 GROUP BY u.user_id
 HAVING fs.status = true;
+
 ```
