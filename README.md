@@ -13,7 +13,7 @@ public class FilmorateApplication {
 }
 ```
 ## Работа с Базой Данных
-![This is an image](ER_diagram)
+![This is an image](ER_diagram.png)
 
 **Примеры запросов:**
 
