@@ -1,53 +1,51 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
-@Component
+@Slf4j
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
-    private final HashMap<Long, Film> filmsMap = new HashMap<>();
-    private long id = 1;
 
-    private long getNewId() {
-        return id++;
-    }
-
-    private ValidaterFilm validater = new ValidaterFilm();
+    private final Map<Long, Film> films = new HashMap<>();
 
     @Override
     public Film create(Film film) {
-        validater.validateFilm(film);
-        film.setId(getNewId());
-        return filmsMap.put(film.getId(), film);
+        films.put(film.getId(), film);
+        log.info("Добавлен новый фильм: {}", film);
+        return film;
     }
 
     @Override
     public Film update(Film film) {
-        validater.validateFilm(film);
-        return filmsMap.put(film.getId(), film);
+        Long id = film.getId();
+        if (!films.containsKey(id))
+            throw new FilmIdException(String.format("Попытка обновить пленку с отсутствующим id = %d", id));
+        films.put(id, film);
+        log.info("Фильм {} был успешно обновлен", film);
+        return film;
     }
 
     @Override
-    public void delete(Film film) {
-        if (!filmsMap.containsKey(film.getId())) throw new FilmIdException("Фильма с таким id не существует.");
-        filmsMap.remove(film.getId());
+    public Collection<Film> getAll() {
+        return films.values();
     }
 
     @Override
-    public ArrayList<Film> getAll() {
-        return new ArrayList<>(filmsMap.values());
+    public Optional<Film> getById(Long id) {
+        return Optional.of(films.get(id));
     }
 
     @Override
-    public Film findById(long id) {
-        if (!filmsMap.containsKey(id)) throw new FilmIdException("Фильма с таким id не существует.");
-        return filmsMap.get(id);
+    public Film delete(Film film) {
+        if (films.containsKey(film.getId())) {
+            log.info("Фильм {} был удален", film);
+            return films.remove(film.getId());
+        }
+        else throw new FilmIdException(String.format("Попытка удалить пленку с отсутствующим id = %d", film.getId()));
     }
-
-
 }

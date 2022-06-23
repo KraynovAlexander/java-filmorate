@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -10,73 +11,67 @@ import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @RestController
+@Validated
 @Slf4j
 @RequestMapping("/users")
-
 public class UserController {
-    private final InMemoryUserStorage userStorage;
     private final UserService userService;
 
     @Autowired
-    public UserController(InMemoryUserStorage userStorage, UserService userService) {
-        this.userStorage = userStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-
-    @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
-        if (id < 0 || friendId < 0) throw new UserException("Отрицательным не может быть id.");
-        userService.addFriend(id, friendId);
-    }
-
-
-    @PostMapping
-    public User create(@Valid @RequestBody User user) throws ValidationException {
-        userStorage.create(user);
-        return user;
-    }
-
-    @PutMapping
-    public User update(@Valid @RequestBody User user) throws ValidationException {
-        if (user.getId() < 0) throw new UserException("Отрицательным не может быть id.");
-        userStorage.update(user);
-        return user;
-    }
     @GetMapping
-    public List<User> getAll() { return userStorage.getAll(); }
-
+    public Collection<User> findAll() {
+        log.info("Запросить всех пользователей");
+        return userService.getUsers();
+    }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        if (id == null || id < 0) throw new UserException("Отрицательным не может быть id.");
-        return userStorage.findById(id);
+        log.info("Запросить пользователя с  id = {}", id);
+        return userService.getUserById(id);
     }
 
-
-    @DeleteMapping
-    public void delete(@RequestBody User user) {
-        userStorage.delete(user);
+    @PostMapping
+    public User create(@Valid @RequestBody User user) {
+        log.info("Запрос на добавление user {}", user);
+        return userService.addUser(user);
     }
 
-    @GetMapping("/{id}/friends")
-    public Set<User> getFriendsList(@PathVariable Long id) {
-        if (id < 0) throw new UserException("Отрицательным не может быть id.");
-        return userService.getFriends(id);
+    @PutMapping
+    public User updateUser(@Valid @RequestBody User user) {
+        log.info("Запрос на обновление user {}", user);
+        return userService.updateUser(user);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Запрос от пользователя с id = {} добавить друга с id = {}", id, friendId);
+        userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
-        if (id < 0 || friendId < 0) throw new UserException("Отрицательным не может быть id.");
+        log.info("Запрос от пользователя с  id = {} удалить друга  с id = {}", id, friendId);
         userService.deleteFriend(id, friendId);
     }
 
+    @GetMapping("/{id}/friends")
+    public Collection<User> findFriends(@PathVariable Long id) {
+        log.info("Запрос друзей  пользователя  с id = {}", id);
+        return userService.findFriends(id);
+    }
+
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
-        return userService.makeFriends(id, otherId);
+    public Collection<User> sharedFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        log.info("Запрос от пользователя с id = {} найти общих друзей с пользователем  с id = {}", id, otherId);
+        return userService.findSharedFriends(id, otherId);
     }
 }
