@@ -1,15 +1,12 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.exception;
 
-
-public class ResponseErrors {
+public class ResponseError {
     private final String error;
 
-    public ResponseErrors(String error) {
+    public ResponseError(String error) {
         this.error = error;
     }
-
     public String getError() {
         return error;
     }
 }
-

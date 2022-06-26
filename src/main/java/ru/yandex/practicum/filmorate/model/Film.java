@@ -1,53 +1,86 @@
 package ru.yandex.practicum.filmorate.model;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
-
+import javax.validation.constraints.*;
 import java.time.LocalDate;
-
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-
+import java.util.TreeSet;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class Film {
-
     private Long id;
-
-    private Set<Long> likes;
-
     @NotBlank
     private String name;
-
-    @Size(max = 200)
-    private String description;
-
-    @PastOrPresent
+    @NotBlank @Size(max = 200) private String description;
+    @NotNull
+    @Past
     private LocalDate releaseDate;
-
-    @Positive
+    @NotNull @Positive
     private int duration;
+    private Set<Long> likes = new TreeSet<>();
+    private Set<Genre> genres;
+    @NotNull private Mpa mpa;
+    private Long rating;
 
 
-    public Film() {
-        likes = new HashSet<>();
+    public Film(Long id, String name, String description, LocalDate releaseDate, int duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
     }
 
-
-    public void remoteLike(Long id) {
-        likes.remove(id);
+    public Film(Long id, String name, String description, LocalDate releaseDate, int duration,
+                Set<Genre> genres, Mpa mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.genres = genres;
+        this.mpa = mpa;
     }
 
+    public Film(Long id, String name, String description, LocalDate releaseDate, int duration, Set<Genre> genres,
+                Mpa mpa, Long rating) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.genres = genres;
+        this.mpa = mpa;
+        this.rating = rating;
+    }
 
+    public int getRating(){
+        return likes.size();
+    }
 
-    public void addLike(Long id) {
-        likes.add(id);
+    public boolean hasLikeFromUser(Long userId) {
+        return likes.contains(userId);
+    }
+
+    public void addLikeFromUser(Long userId) {
+        likes.add(userId);
+    }
+
+    public void removeLikeFromUser(Long userId) {
+        likes.remove(userId);
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("description", description);
+        values.put("releaseDate", releaseDate);
+        values.put("duration", duration);
+        return values;
     }
 }
